@@ -1,7 +1,6 @@
 module Authentication
-  mattr_accessor :login_regex, :bad_login_message, 
-    :name_regex, :bad_name_message,
-    :email_name_regex, :domain_head_regex, :domain_tld_regex, :email_regex, :bad_email_message
+  mattr_accessor :login_regex, :name_regex,
+    :email_name_regex, :domain_head_regex, :domain_tld_regex, :email_regex
 
   self.login_regex       = /\A\w[\w\.\-_@]+\z/                     # ASCII, strict
   # self.login_regex       = /\A[[:alnum:]][[:alnum:]\.\-_@]+\z/     # Unicode, strict
