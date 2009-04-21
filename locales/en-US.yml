@@ -1,4 +1,10 @@
 en-US:
+  activerecord:
+    errors:
+      messages:
+        bad_login : "use only letters, numbers, and .-_@ please."
+        bad_name : "avoid non-printing characters and \\&gt;&lt;&amp;/ please."
+        bad_email : "should look like an email address."
   restful_authentication:
     account_activated : "{{login}} your account has been activated.  Welcome aboard!"
     account_activation_url_message : "Visit this url to activate your account:"
