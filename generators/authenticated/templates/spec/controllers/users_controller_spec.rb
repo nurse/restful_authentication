@@ -72,7 +72,7 @@ describe <%= model_controller_class_name %>Controller do
   
   it 'localizates signup message' do
     msg = "Sign up is complete jo!"
-    I18n.should_receive(:t).with(:signup_complete_and_do_login).and_return(msg)
+    I18n.should_receive(:t).with('restful_authentication.signup_complete_and_do_login').and_return(msg)
     <%= class_name %>.authenticate('aaron', 'monkey').should be_nil
     get :activate, :activation_code => <%= table_name %>(:aaron).activation_code
     flash[:notice].should eql(msg)
@@ -80,7 +80,7 @@ describe <%= model_controller_class_name %>Controller do
   
   it 'localizates blank activation code message' do
       msg = "Missing activation code"
-      I18n.should_receive(:t).with(:blank_activation_code).and_return(msg)
+      I18n.should_receive(:t).with('restful_authentication.blank_activation_code').and_return(msg)
       get :activate
       flash[:error].should eql(msg)
   end
@@ -105,14 +105,14 @@ describe <%= model_controller_class_name %>Controller do
   
   it 'localizates bogus activation code message' do
       msg = "Bogus activation code"
-      I18n.should_receive(:t).with(:bogus_activation_code, :model => 'user').and_return(msg)
+      I18n.should_receive(:t).with('restful_authentication.bogus_activation_code', :model => 'user').and_return(msg)
       get :activate, :activation_code => 'i_haxxor_joo'
       flash[:error].should eql(msg)
   end
   
   it "localizates signup with activation message" do
     msg = "Sign up is complete jo!"
-    I18n.should_receive(:t).with(:signup_complete_with_activation).and_return(msg)
+    I18n.should_receive(:t).with('restful_authentication.signup_complete_with_activation').and_return(msg)
     create_<%= file_name %>
     flash[:notice].should eql(msg)
   end<% end %>

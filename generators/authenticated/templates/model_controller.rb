@@ -30,12 +30,12 @@ class <%= model_controller_class_name %>Controller < ApplicationController
       self.current_<%= file_name %> = @<%= file_name %> # !! now logged in
       <% end -%>redirect_back_or_default('/')
       <% if options[:include_activation] -%>
-        flash[:notice] = I18n.t(:signup_complete_with_activation)
+        flash[:notice] = I18n.t('restful_authentication.signup_complete_with_activation')
       <% else -%>
-        flash[:notice] = I18n.t(:signup_complete)
+        flash[:notice] = I18n.t('restful_authentication.signup_complete')
       <% end %>
     else
-      flash[:error]  = I18n.t(:signup_problem)
+      flash[:error]  = I18n.t('restful_authentication.signup_problem')
       render :action => 'new'
     end
   end
@@ -46,13 +46,13 @@ class <%= model_controller_class_name %>Controller < ApplicationController
     case
     when (!params[:activation_code].blank?) && <%= file_name %> && !<%= file_name %>.active?
       <%= file_name %>.activate!
-      flash[:notice] = I18n.t(:signup_complete_and_do_login)
+      flash[:notice] = I18n.t('restful_authentication.signup_complete_and_do_login')
       redirect_to '/login'
     when params[:activation_code].blank?
-      flash[:error] = I18n.t(:blank_activation_code)
+      flash[:error] = I18n.t('restful_authentication.blank_activation_code')
       redirect_back_or_default('/')
     else 
-      flash[:error]  = I18n.t(:bogus_activation_code, :model => '<%= file_name %>')
+      flash[:error]  = I18n.t('restful_authentication.bogus_activation_code', :model => '<%= file_name %>')
       redirect_back_or_default('/')
     end
   end

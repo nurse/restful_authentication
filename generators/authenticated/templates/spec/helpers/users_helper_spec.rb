@@ -124,7 +124,7 @@ describe <%= model_controller_class_name %>Helper do
     end
     it "should use localized :not_signed_in as link text with no :content_method specified" do
       msg = "not signed in 123"
-      I18n.should_receive(:t).with(:not_signed_in).and_return(msg)
+      I18n.should_receive(:t).with('restful_authentication.not_signed_in').and_return(msg)
       link_to_current_user().should have_tag("a", msg)
     end
     it "should use the ip address as title" do

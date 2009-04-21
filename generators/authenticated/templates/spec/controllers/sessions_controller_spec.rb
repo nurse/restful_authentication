@@ -46,7 +46,7 @@ describe <%= controller_class_name %>Controller do
             it "logs me in"                  do do_create; controller.send(:logged_in?).should  be_true  end    
             it "greets me nicely"            do 
               msg = "You are logged in"
-              I18n.should_receive(:t).with(:logged_in).and_return(msg)
+              I18n.should_receive(:t).with('restful_authentication.logged_in').and_return(msg)
               do_create
               response.flash[:notice].should eql(msg)   
             end
@@ -83,7 +83,7 @@ describe <%= controller_class_name %>Controller do
     it 'logs out keeping session'   do controller.should_receive(:logout_keeping_session!); do_create end
     it 'flashes an error'           do
       msg = "E R R O R"
-      I18n.should_receive(:t).with(:login_failed, :login => 'quentin').and_return(msg)
+      I18n.should_receive(:t).with('restful_authentication.login_failed', :login => 'quentin').and_return(msg)
       do_create
       flash[:error].should eql(msg) 
     end
@@ -107,7 +107,7 @@ describe <%= controller_class_name %>Controller do
     it 'redirects me to the home page' do do_destroy; response.should be_redirect     end
     it 'localizes logout message' do
       msg = "E R R O R"
-      I18n.should_receive(:t).with(:logged_out).and_return(msg)
+      I18n.should_receive(:t).with('restful_authentication.logged_out').and_return(msg)
       do_destroy
       flash[:notice].should eql(msg)
     end
