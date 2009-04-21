@@ -1,0 +1,28 @@
+es:
+  restful_authentication:
+    account_activated : "{{login}}, se ha activado tu cuenta. ¡Bienvenido a bordo!"
+    account_activation_url_message : "Visita esta url para activar tu cuenta:"
+    account_created : "Tu cuenta se ha creado."
+    activation_complete_email_subject : 'Tu cuenta se ha activado'
+    activation_required_email_subject : 'Activa tu nueva cuenta por favor'
+    blank_activation_code : "Falta el código de activación. Entra en la URL indicada en el correo electrónico por favor."
+    bogus_activation_code : "No existe ese código de activación, ¿leíste el correo electrónico? O quizás ya has activado tu cuenta, prueba a entrar."
+    create_account : "Crear una cuenta"
+    email : "Correo electrónico"
+    log_in : "Entrar"
+    log_out : "Salir"
+    logged_in : "Conectado con éxito"
+    logged_in_as : "Conectado como {{login}}"
+    logged_out : "Te has desconectado."
+    login : "Nombre"
+    login_failed : "No se ha podido conectar como {{login}}'"
+    new_user_sign_up : "Registrarse como nuevo usuario"
+    not_logged_in : "No conectado"
+    password : "Contraseña"
+    password_confirmation : "Confirmar Contraseña"
+    remember_me : "Recuérdame"
+    sign_up : "Registrarse"
+    signup_complete : "¡Registro completado!"
+    signup_complete_and_do_login : "¡Registro completado! Por favor, conéctate con tu nombre y contraseña para continuar."
+    signup_complete_with_activation : "¡Gracias por registrarte!  Te estamos enviando un correo electrónico con tu código de activación."
+    signup_problem : "Lo sentimos, no se pudo crear esa cuenta. Por favor, inténtalo de nuevo, o contacta un administrador (el enlace está abajo)."
