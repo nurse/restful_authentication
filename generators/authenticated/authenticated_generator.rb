@@ -4,7 +4,8 @@ class AuthenticatedGenerator < Rails::Generator::NamedBase
   default_options :skip_migration => false,
                   :skip_routes    => false,
                   :old_passwords  => false,
-                  :include_activation => false
+                  :include_activation => false,
+                  :include_password_reset => false
 
   attr_reader   :controller_name,
                 :controller_class_path,
@@ -90,7 +91,7 @@ class AuthenticatedGenerator < Rails::Generator::NamedBase
       m.directory File.join('app/controllers', model_controller_class_path)
       m.directory File.join('app/helpers', controller_class_path)
       m.directory File.join('app/views', controller_class_path, controller_file_name)
-      m.directory File.join('app/views', class_path, "#{file_name}_mailer") if options[:include_activation]
+      m.directory File.join('app/views', class_path, "#{file_name}_mailer") if options[:include_activation] || options[:include_password_reset]
 
       m.directory File.join('app/controllers', model_controller_class_path)
       m.directory File.join('app/helpers', model_controller_class_path)
@@ -117,7 +118,7 @@ class AuthenticatedGenerator < Rails::Generator::NamedBase
                             class_path,
                             "#{file_name}.rb")
 
-      if options[:include_activation]
+      if options[:include_activation] || options[:include_password_reset]
         %w( mailer observer ).each do |model_type|
           m.template "#{model_type}.rb", File.join('app/models',
                                                class_path,
@@ -205,7 +206,7 @@ class AuthenticatedGenerator < Rails::Generator::NamedBase
                     File.join('test/unit',
                               class_path,
                               "#{file_name}_test.rb")
-        if options[:include_activation]
+        if options[:include_activation] || options[:include_password_reset]
           m.template 'test/mailer_test.rb', File.join('test/unit', class_path, "#{file_name}_mailer_test.rb")
         end
         m.template 'spec/fixtures/users.yml',
@@ -238,6 +239,16 @@ class AuthenticatedGenerator < Rails::Generator::NamedBase
         end
       end
 
+      if options[:include_password_reset]
+        # Mailer templates
+        m.template "password_reset_notification.erb", File.join('app/views', "#{file_name}_mailer", "password_reset_notification.erb")
+        # Mailer templates
+        %w( password_reset_request reset_password ).each do |action|
+          m.template "#{action}.html.erb",
+          File.join('app/views', model_controller_class_path, model_controller_file_name, "#{action}.html.erb")
+        end
+      end
+
       unless options[:skip_migration]
         m.migration_template 'migration.rb', 'db/migrate', :assigns => {
           :migration_name => "Create#{class_name.pluralize.gsub(/::/, '')}"
@@ -251,6 +262,13 @@ class AuthenticatedGenerator < Rails::Generator::NamedBase
         m.route_name('register', '/register', {:controller => model_controller_plural_name, :action => 'create'})
         m.route_name('login',    '/login',    {:controller => controller_controller_name, :action => 'new'})
         m.route_name('logout',   '/logout',   {:controller => controller_controller_name, :action => 'destroy'})
+        if options[:include_activation]
+          m.route_name('activate', '/activate/:activation_code', {:controller => model_controller_plural_name, :action => 'activate', :activation_code => nil})
+        end
+        if options[:include_password_reset]
+          m.route_name('password_reset_request',    '/password_reset_request',    {:controller => model_controller_plural_name, :action => 'password_reset_request'})
+          m.route_name('reset_password',   '/reset_password/:password_reset_code',   {:controller => model_controller_plural_name, :action => 'reset_password'})
+        end
       end
     end
 
@@ -264,7 +282,7 @@ class AuthenticatedGenerator < Rails::Generator::NamedBase
       puts ("-" * 70)
       puts "Once finished, don't forget to:"
       puts
-      if options[:include_activation]
+      if options[:include_activation] || options[:include_password_reset]
         puts "- Add an observer to config/environment.rb"
         puts "    config.active_record.observers = :#{file_name}_observer"
       end
@@ -282,6 +300,10 @@ class AuthenticatedGenerator < Rails::Generator::NamedBase
       puts %(    map.logout '/logout', :controller => '#{controller_file_name}', :action => 'destroy')
       if options[:include_activation]
         puts %(    map.activate '/activate/:activation_code', :controller => '#{model_controller_file_name}', :action => 'activate', :activation_code => nil)
+      end
+      if options[:include_password_reset]
+        puts %(    map.password_reset_request '/password_reset_request', :controller => '#{model_controller_file_name}', :action => 'password_reset_request')
+        puts %(    map.reset_password '/reset_password/:password_reset_code', :controller => '#{model_controller_file_name}', :action => 'reset_password')
       end
       if options[:stateful]
         puts  "  and modify the map.resources :#{model_controller_file_name} line to include these actions:"
@@ -392,6 +414,8 @@ protected
       "Use acts_as_state_machine.  Assumes --include-activation") { |v| options[:include_activation] = options[:stateful] = true }
     opt.on("--aasm",
       "Use (gem) aasm.  Assumes --include-activation")            { |v| options[:include_activation] = options[:stateful] = options[:aasm] = true }
+    opt.on("--include-password-reset",
+      "Generate password reset request via email")                { |v| options[:include_password_reset] = true }
     opt.on("--rspec",
       "Force rspec mode (checks for RAILS_ROOT/spec by default)") { |v| options[:rspec] = true }
     opt.on("--no-rspec",

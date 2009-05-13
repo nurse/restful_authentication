@@ -47,6 +47,23 @@ class <%= class_name %> < ActiveRecord::Base
     activation_code.nil?
   end<% end %>
 
+<% if options[:include_password_reset] %>
+  def reset_password_request
+    @password_reset_requested = true
+    self.make_password_reset_code
+    save(false)
+  end
+
+  def reset_password
+    self.password_reset_code = nil
+    save
+  end
+
+  #used in user_observer
+  def recently_password_reset_requested?
+    @password_reset_requested
+  end<% end %>
+
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   #
   # uff.  this is really an authorization, not authentication routine.  
@@ -78,6 +95,9 @@ class <%= class_name %> < ActiveRecord::Base
   <% end -%>
       self.activation_code = self.class.make_token
     end
+<% end %><% if options[:include_password_reset] %>
+    def make_password_reset_code
+      self.password_reset_code = self.class.make_token
+    end
 <% end %>
-
 end

@@ -56,6 +56,35 @@ class <%= model_controller_class_name %>Controller < ApplicationController
       redirect_back_or_default('/')
     end
   end
+<% end %><% if options[:include_forgot] %>
+  def password_reset_request
+    @<%= file_name %> = <%= class_name %>.find_or_initialize_by_email(params[:email])
+    if @<%= file_name %>.new_record?
+      @<%= file_name %>.errors.add :email, I18n.t('restful_authentication.password_reset_request_invalid_email') unless @<%= file_name %>.email.nil?
+    else
+      @<%= file_name %>.reset_password_request
+      flash[:notice] = I18n.t('restful_authentication.password_reset_request_sent')
+      redirect_back_or_default('/')
+    end
+  end
+
+  def reset_password
+    @<%= file_name %> = <%= class_name %>.find_by_password_reset_code(params[:password_reset_code])
+    if @<%= file_name %>.nil?
+      flash[:error] = I18n.t('restful_authentication.reset_password_code_invalid')
+      redirect_back_or_default('/')
+    end
+    return unless params[:<%= file_name %>] && request.post? # only render the form when method is GET
+
+    current_<%= file_name %> = @<%= file_name %>
+    @<%= file_name %>.password_confirmation = params[:<%= file_name %>][:password_confirmation]
+    @<%= file_name %>.password = params[:<%= file_name %>][:password]
+    @<%= file_name %>.reset_password
+    if @<%= file_name %>.errors.empty?
+      flash[:notice] = I18n.t('restful_authentication.reset_password_success')
+      redirect_back_or_default('/')
+    end
+  end
 <% end %><% if options[:stateful] %>
   def suspend
     @<%= file_name %>.suspend! 

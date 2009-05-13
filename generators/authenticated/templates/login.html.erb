@@ -11,6 +11,8 @@
 <p><%%= label_tag 'remember_me', I18n.t('restful_authentication.remember_me') %>
 <%%= check_box_tag 'remember_me', '1', @remember_me %></p>
 -->
-
+<% if options[:include_activation] %>
+<p><%%= link_to I18n.t('restful_authentication.remember_password_link'), password_reset_request_path %></p>
+<% end %>
 <p><%%= submit_tag I18n.t('restful_authentication.log_in') %></p>
 <%% end -%>
