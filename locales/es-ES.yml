@@ -21,7 +21,7 @@ es-ES:
     logged_in_as : "Conectado como {{login}}"
     logged_out : "Te has desconectado."
     login : "Nombre"
-    login_failed : "No se ha podido conectar como {{login}}'"
+    login_failed : "No se ha podido conectar como {{login}}"
     new_user_sign_up : "Registrarse como nuevo usuario"
     not_logged_in : "No conectado"
     password : "Contraseña"
