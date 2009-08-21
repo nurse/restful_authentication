@@ -28,7 +28,7 @@ class <%= model_controller_class_name %>Controller < ApplicationController
       # button. Uncomment if you understand the tradeoffs.
       # reset session
       self.current_<%= file_name %> = @<%= file_name %> # !! now logged in
-      <% end -%>redirect_back_or_default('/')
+      <% end -%>redirect_back_or_default(root_path)
       <% if options[:include_activation] -%>
         flash[:notice] = I18n.t('restful_authentication.signup_complete_with_activation')
       <% else -%>
@@ -50,10 +50,10 @@ class <%= model_controller_class_name %>Controller < ApplicationController
       redirect_to '/login'
     when params[:activation_code].blank?
       flash[:error] = I18n.t('restful_authentication.blank_activation_code')
-      redirect_back_or_default('/')
+      redirect_back_or_default(root_path)
     else 
       flash[:error]  = I18n.t('restful_authentication.bogus_activation_code', :model => '<%= file_name %>')
-      redirect_back_or_default('/')
+      redirect_back_or_default(root_path)
     end
   end
 <% end %><% if options[:include_forgot] %>
@@ -64,7 +64,7 @@ class <%= model_controller_class_name %>Controller < ApplicationController
     else
       @<%= file_name %>.reset_password_request
       flash[:notice] = I18n.t('restful_authentication.password_reset_request_sent')
-      redirect_back_or_default('/')
+      redirect_back_or_default(root_path)
     end
   end
 
@@ -72,7 +72,7 @@ class <%= model_controller_class_name %>Controller < ApplicationController
     @<%= file_name %> = <%= class_name %>.find_by_password_reset_code(params[:password_reset_code])
     if @<%= file_name %>.nil?
       flash[:error] = I18n.t('restful_authentication.reset_password_code_invalid')
-      redirect_back_or_default('/')
+      redirect_back_or_default(root_path)
     end
     return unless params[:<%= file_name %>] && request.post? # only render the form when method is GET
 
@@ -82,7 +82,7 @@ class <%= model_controller_class_name %>Controller < ApplicationController
     @<%= file_name %>.reset_password
     if @<%= file_name %>.errors.empty?
       flash[:notice] = I18n.t('restful_authentication.reset_password_success')
-      redirect_back_or_default('/')
+      redirect_back_or_default(root_path)
     end
   end
 <% end %><% if options[:stateful] %>

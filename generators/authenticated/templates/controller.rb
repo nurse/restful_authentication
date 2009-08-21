@@ -18,7 +18,7 @@ class <%= controller_class_name %>Controller < ApplicationController
       self.current_<%= file_name %> = <%= file_name %>
       new_cookie_flag = (params[:remember_me] == "1")
       handle_remember_cookie! new_cookie_flag
-      redirect_back_or_default('/')
+      redirect_back_or_default(root_path)
       flash[:notice] = I18n.t('restful_authentication.logged_in')
     else
       note_failed_signin
@@ -31,7 +31,7 @@ class <%= controller_class_name %>Controller < ApplicationController
   def destroy
     logout_killing_session!
     flash[:notice] = I18n.t('restful_authentication.logged_out')
-    redirect_back_or_default('/')
+    redirect_back_or_default(root_path)
   end
 
 protected
